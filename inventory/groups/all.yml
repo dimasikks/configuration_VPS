@@ -1,0 +1,8 @@
+all:
+  hosts:
+    server_1:
+      ansible_host: 192.168.10.167
+      ansible_user: dmsksc
+      ansible_ssh_password: [MASKED]
+      ansible_become_method: su
+      ansible_become_password: [MASKED]

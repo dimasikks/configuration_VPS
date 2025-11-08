@@ -1,0 +1,24 @@
+    - name: ADD PUBLIC KEY TO AUTHORIZED KEYS
+      ansible.builtin.shell:
+        cmd: "cat .ssh/id_rsa.pub | tee -a .ssh/authorized_keys; chown -R {{ conf.user }}:{{ conf.user }} .ssh/"
+      args:
+        chdir: "{{ conf.home }}"
+
+    - name: TAKE SSH-PRIVATE-KEY FOR AUTHORIZATION
+      ansible.builtin.shell:
+        cmd: "cat .ssh/id_rsa | tee {{ inventory_hostname }}_keyfile"
+      args:
+        chdir: "{{ conf.home }}"
+      register: ssh_key_file
+
+    - name: COPY TO LOCALHOST SSH-PRIVATE-KEY FOR AUTHORIZATION
+      ansible.builtin.fetch:
+        src: "{{ conf.home }}/{{ inventory_hostname }}_keyfile"
+        dest: "{{ conf.localhost_destionation }}"
+        flat: yes
+      when: conf.ssh_key in ['all','copy']
+
+    - name: SHOW SSH-PRIVATE-KEY FOR AUTHORIZATION
+      ansible.builtin.debug: 
+        msg: "{{ ssh_key_file.stdout }}"
+      when: conf.ssh_key in ['all','show']

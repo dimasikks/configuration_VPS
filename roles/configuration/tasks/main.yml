@@ -1,0 +1,10 @@
+---
+- name: BASE CONFIGURATION
+  import_tasks: base.yml
+  when: base_configure
+  tags: ['base']
+
+- name: SECURE CONFIGURAION
+  import_tasks: secure.yml
+  when: secure_configure
+  tags: ['secure']

@@ -1,0 +1,61 @@
+- name: STARTING SECURE CONFIGURATION
+  meta: noop
+
+- name: INCLUDE VARS
+  include_vars: 
+    file: ../defaults/secure.yml
+
+- name: INSTALL PACKAGES
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    update_cache: yes
+  loop: "{{ secure_configuration.packages }}"
+
+- name: CONFIGURE SECURE USER 
+  become: true
+  vars:
+    scu: "{{ secure_configuration.configure_user }}"
+  block:
+    - name: CREATE SECURE USER
+      ansible.builtin.user:
+        user: "{{ scu.user }}"
+        home: "{{ scu.home }}"
+        password: "{{ scu.password | password_hash('sha512') }}"
+        shell: "{{ scu.shell | default('/bin/bash') }}"
+        groups: "{{ scu.groups | default('sudo') }}"
+        append: "{{ scu.append | default('yes') }}"
+        generate_ssh_key: "{{ scu.generate_ssh_key | default('yes') }}"
+        ssh_key_file: ".ssh/id_rsa"
+        force: yes
+    
+    - name: SSH-KEYS-STEPS
+      import_tasks: ssh_keys.yml 
+      vars: 
+        conf: "{{ scu }}"
+  when: secure_configuration.configure_user.enabled
+
+- name: CONFIGURE ROOT USER 
+  become: true
+  vars:
+    scr: "{{ secure_configuration.configure_root }}"
+  block:
+    - name: ADDITIONAL CONFIGURE FOR ROOT USER
+      ansible.builtin.user:
+        user: "{{ scr.user }}"
+        home: "{{ scr.home }}"
+        password: "{{ scr.password | password_hash('sha512') }}"
+        generate_ssh_key: "{{ scr.generate_ssh_key | default('yes') }}"
+        ssh_key_file: ".ssh/id_rsa"
+        force: yes
+    
+    - name: UPDATE ROOT PASSWORD IN ANSIBLE VARS
+      ansible.builtin.set_fact:
+        ansible_become_password: "{{ scr.password }}"
+
+    - name: SSH-KEYS-STEPS
+      import_tasks: ssh_keys.yml 
+      vars: 
+        conf: "{{ scr }}"
+  when: secure_configuration.configure_root.enabled

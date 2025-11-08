@@ -1,0 +1,6 @@
+base_configuration:
+  packages:
+    - { name: "curl", state: "present" }
+    - { name: "wget", state: "present" }
+    - { name: "docker.io", state: "present" }
+    - { name: "nginx", state: "present" }

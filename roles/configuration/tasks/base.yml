@@ -1,0 +1,14 @@
+- name: STARTING BASE CONFIGURATION
+  meta: noop
+
+- name: INCLUDE VARS
+  include_vars: 
+    file: ../defaults/base.yml
+
+- name: INSTALL PACKAGES
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    update_cache: yes
+  loop: "{{ base_configuration.packages }}"
