@@ -69,7 +69,7 @@
     scs: "{{ secure_configuration.ssh }}"
   block:
     - name: COPY SSH CONFIG
-      ansible.builtin.copy:
+      ansible.builtin.template:
         src: sshd_config.primary
         dest: /etc/ssh/sshd_config
         mode: 0644
@@ -98,7 +98,7 @@
     sci: "{{ secure_configuration.iptables }}"
   block:
     - name: COPY IPTABLES CONFIG
-      ansible.builtin.copy:
+      ansible.builtin.template:
         src: iptables.primary
         dest: iptables.primary
         mode: 0655

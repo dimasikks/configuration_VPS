@@ -8,7 +8,7 @@ logtarget = /var/log/fail2ban.log
 
 [sshd]
 enabled = true
-port = {{ secure_configuration.fail2ban.ssh_port }}
+port = {{ secure_configuration.ssh.new_port }}
 filter = sshd
 logpath = /var/log/auth.log
 maxretry = {{ secure_configuration.fail2ban.maxretry }}

@@ -26,13 +26,11 @@ secure_configuration:
 
   ssh:
     enabled: true
-
+    new_port: 45278
     backup: true
 
   fail2ban:
     enabled: true
-
-    ssh_port: 22
     maxretry: 2
     bantime: 86400
 
