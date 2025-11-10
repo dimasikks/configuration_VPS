@@ -5,3 +5,4 @@ base_configuration:
     - { name: "docker.io", state: "present" }
     - { name: "nginx", state: "present" }
     - { name: "rsyslog", state: "present" }
+    - { name: "sudo", state: "present" }
