@@ -4,3 +4,4 @@ base_configuration:
     - { name: "wget", state: "present" }
     - { name: "docker.io", state: "present" }
     - { name: "nginx", state: "present" }
+    - { name: "rsyslog", state: "present" }

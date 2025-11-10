@@ -3,7 +3,7 @@
 
 - name: INCLUDE VARS
   include_vars: 
-    file: ../defaults/base.yml
+    file: ../vars/base.yml
 
 - name: INSTALL PACKAGES
   become: true

@@ -1,12 +1,12 @@
     - name: ADD PUBLIC KEY TO AUTHORIZED KEYS
       ansible.builtin.shell:
-        cmd: "cat .ssh/id_rsa.pub | tee -a .ssh/authorized_keys; chown -R {{ conf.user }}:{{ conf.user }} .ssh/"
+        cmd: "cat {{ defs.ssh_key_file }}.pub | tee -a .ssh/authorized_keys; chown -R {{ conf.user }}:{{ conf.user }} {{ defs.ssh_key_file | dirname }}"
       args:
         chdir: "{{ conf.home }}"
 
     - name: TAKE SSH-PRIVATE-KEY FOR AUTHORIZATION
       ansible.builtin.shell:
-        cmd: "cat .ssh/id_rsa | tee {{ inventory_hostname }}_keyfile"
+        cmd: "cat {{ defs.ssh_key_file }} | tee {{ inventory_hostname }}_keyfile"
       args:
         chdir: "{{ conf.home }}"
       register: ssh_key_file

@@ -1,2 +1,3 @@
-base_configure: true
-secure_configure: true
+defs:
+  ssh_key_file: .ssh/id_rsa
+  force: yes

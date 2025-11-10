@@ -3,7 +3,7 @@
 
 - name: INCLUDE VARS
   include_vars: 
-    file: ../defaults/secure.yml
+    file: ../vars/secure.yml
 
 - name: INSTALL PACKAGES
   become: true
@@ -27,8 +27,8 @@
         groups: "{{ scu.groups | default('sudo') }}"
         append: "{{ scu.append | default('yes') }}"
         generate_ssh_key: "{{ scu.generate_ssh_key | default('yes') }}"
-        ssh_key_file: ".ssh/id_rsa"
-        force: yes
+        ssh_key_file: "{{ defs.ssh_key_file }}"
+        force: "{{ defs.force }}"
     
     - name: SSH-KEYS-STEPS
       import_tasks: ssh_keys.yml 
@@ -47,8 +47,8 @@
         home: "{{ scr.home }}"
         password: "{{ scr.password | password_hash('sha512') }}"
         generate_ssh_key: "{{ scr.generate_ssh_key | default('yes') }}"
-        ssh_key_file: ".ssh/id_rsa"
-        force: yes
+        ssh_key_file: "{{ defs.ssh_key_file }}"
+        force: "{{ defs.force }}"
     
     - name: UPDATE ROOT PASSWORD IN ANSIBLE VARS
       ansible.builtin.set_fact:

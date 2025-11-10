@@ -1,2 +1,2 @@
----
-# vars file for secure_configuration
+base_configure: true
+secure_configure: true
