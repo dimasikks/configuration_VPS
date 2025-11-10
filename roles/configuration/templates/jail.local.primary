@@ -1,0 +1,15 @@
+[DEFAULT]
+ignoreip = 127.0.0.1/8
+bantime = 3600
+findtime = 600
+maxretry = 5
+banaction = iptables-multiport
+logtarget = /var/log/fail2ban.log
+
+[sshd]
+enabled = true
+port = {{ secure_configuration.fail2ban.ssh_port }}
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = {{ secure_configuration.fail2ban.maxretry }}
+bantime = {{ secure_configuration.fail2ban.bantime }}

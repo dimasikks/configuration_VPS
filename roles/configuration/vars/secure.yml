@@ -1,6 +1,6 @@
 secure_configuration:
   packages:
-    - { name: "iptables", state: "present" }
+    - { name: "iptables", state: "latest" }
     - { name: "fail2ban", state: "present" }
 
   configure_user: 
@@ -25,4 +25,16 @@ secure_configuration:
     localhost_destionation: ~/{{ inventory_hostname }}_root_keyfile
 
   ssh:
+    enabled: true
+
+    backup: true
+
+  fail2ban:
+    enabled: true
+
+    ssh_port: 22
+    maxretry: 2
+    bantime: 86400
+
+  iptables:
     enabled: true

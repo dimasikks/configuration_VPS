@@ -1,2 +1,11 @@
----
-# handlers file for secure_configuration
+- name: RESTART SSH
+  become: true
+  ansible.builtin.service:
+    name: ssh
+    state: restarted
+
+- name: RESTART FAIL2BAN
+  become: true
+  ansible.builtin.service:
+    name: fail2ban
+    state: restarted

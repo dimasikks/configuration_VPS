@@ -4,6 +4,7 @@
 - name: INCLUDE VARS
   include_vars: 
     file: ../vars/secure.yml
+  tags: ['secure-scu','secure-scr','secure-sch','secure-scf','secure-sci']
 
 - name: INSTALL PACKAGES
   become: true
@@ -35,6 +36,7 @@
       vars: 
         conf: "{{ scu }}"
   when: secure_configuration.configure_user.enabled
+  tags: ['secure-scu']
 
 - name: CONFIGURE ROOT USER 
   become: true
@@ -59,11 +61,52 @@
       vars: 
         conf: "{{ scr }}"
   when: secure_configuration.configure_root.enabled
+  tags: ['secure-scr']
 
 - name: CONFIGURE SSH
   become: true
   vars:
     scs: "{{ secure_configuration.ssh }}"
   block:
-   
-  when: secure_configuration.configure_root.enabled
+    - name: COPY SSH CONFIG
+      ansible.builtin.copy:
+        src: sshd_config.primary
+        dest: /etc/ssh/sshd_config
+        mode: 0644
+        backup: "{{ scs.backup | default('true') }}"
+      notify: RESTART SSH
+  when: secure_configuration.ssh.enabled
+  tags: ['secure-sch']
+
+- name: CONFIGURE FAIL2BAN
+  become: true
+  vars:
+    scf: "{{ secure_configuration.fail2ban }}"
+  block:
+    - name: COPY FAIL2BAN CONFIG
+      ansible.builtin.template:
+        src: jail.local.primary
+        dest: /etc/fail2ban/jail.local
+        mode: 0644
+      notify: RESTART FAIL2BAN
+  when: secure_configuration.fail2ban.enabled
+  tags: ['secure-scf']
+
+- name: CONFIGURE NFTABLES
+  become: true
+  vars:
+    sci: "{{ secure_configuration.iptables }}"
+  block:
+    - name: COPY IPTABLES CONFIG
+      ansible.builtin.copy:
+        src: iptables.primary
+        dest: iptables.primary
+        mode: 0655
+
+    - name: APPLY IPTABLES CONFIG
+      ansible.builtin.shell:
+        cmd: bash iptables.primary; rm iptables.primary
+      environment:
+        PATH: "/usr/bin:/usr/sbin"
+  when: secure_configuration.iptables.enabled
+  tags: ['secure-sci']
