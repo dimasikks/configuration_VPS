@@ -59,3 +59,11 @@
       vars: 
         conf: "{{ scr }}"
   when: secure_configuration.configure_root.enabled
+
+- name: CONFIGURE SSH
+  become: true
+  vars:
+    scs: "{{ secure_configuration.ssh }}"
+  block:
+   
+  when: secure_configuration.configure_root.enabled

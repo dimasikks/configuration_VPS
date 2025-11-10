@@ -23,3 +23,6 @@ secure_configuration:
     generate_ssh_key: yes
     ssh_key: all
     localhost_destionation: ~/{{ inventory_hostname }}_root_keyfile
+
+  ssh:
+    enabled: true
