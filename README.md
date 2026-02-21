@@ -14,7 +14,7 @@ Automated VPS/VDS server provisioning and security hardening using Ansible. This
 
 ### Prerequisites
 - Ansible core 2.16.3+ installed on your local machine
-- SSH access to your VPS/VDS server
+- SSH access to your VPS/VDS server && installed sshpass package 
 - Python 3.x on the target server
 
 ### Usage
